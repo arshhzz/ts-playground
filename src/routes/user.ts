@@ -7,9 +7,10 @@ const userrouter = Router();
   userrouter.post("/user", (req : Request <{}, {}, userPayload> , res : Response) => {
     const safeParsed = userSchema.safeParse(req.body);
     if(!safeParsed.success) {
-      return res.status(400).json({
+      res.status(400).json({
       error: safeParsed.error.format()
       });
+      return;
     }
     const { username } = safeParsed.data;
 
