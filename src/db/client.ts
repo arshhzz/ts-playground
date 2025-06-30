@@ -64,7 +64,7 @@ const usernameSchema = z.object({
 testRouter.put("/:id", async (req : Request, res : Response) => {
   const safeParsed = usernameSchema.safeParse(req.body);
   const id = parseInt(req.params.id);
-  
+
   if (isNaN(id)) {
     return res.status(400).json({ msg: "Invalid or missing ID" });
   }
@@ -85,6 +85,23 @@ testRouter.put("/:id", async (req : Request, res : Response) => {
   }
   catch(err) {
     res.status(500).json({msg : "Server not Running"});
+  }
+});
+
+testRouter.delete("/:id", async(req : Request, res : Response) => {
+  const id = parseInt(req.params.id);
+  if(isNaN(id)) {
+    return res.status(400).json({msg: "Bad Request"});
+  }
+  try {
+    await prisma.user.delete({
+      where : {
+        id
+      }
+    })
+    return res.status(200).json({msg : "User deleted Successfully"});
+  } catch (err) {
+    res.status(404).json({msg : "User Not Found"})
   }
 });
 
