@@ -4,6 +4,7 @@ import logger from "./middlewares/logger";
 import echorouter from "./routes/echo";
 import userrouter from "./routes/user";
 import { errorHandler } from "./middlewares/errorhandler";
+import testRouter from "./db/client";
 
 const app = express();
 app.use(express.json());
@@ -24,6 +25,7 @@ app.get("/api/greet", (req: Request, res: Response) => {
 });
 app.use("/api", echorouter);
 app.use("/api", userrouter);
+app.use("/api/user", testRouter); 
 
 app.use(errorHandler);
 
