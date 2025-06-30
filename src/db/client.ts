@@ -1,5 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Router, Request, Response } from "express";
+import {z} from "zod";
 
 const testRouter = Router();
 const prisma = new PrismaClient();
@@ -53,6 +54,37 @@ testRouter.get("/:id", async (req : Request, res : Response) => {
   } 
   catch(err) {
     return res.status(500).json({error: (err as Error).message});
+  }
+});
+
+const usernameSchema = z.object({
+  username : z.string().min(3)
+})
+
+testRouter.put("/:id", async (req : Request, res : Response) => {
+  const safeParsed = usernameSchema.safeParse(req.body);
+  const id = parseInt(req.params.id);
+  
+  if (isNaN(id)) {
+    return res.status(400).json({ msg: "Invalid or missing ID" });
+  }
+
+  if(!safeParsed.success) {
+    return res.status(400).json({
+      msg : "Invalid inputs"
+    });
+  }
+  try {
+    const updateUser = await prisma.user.update({
+      where : {id},
+      data : {username : safeParsed.data.username}
+    });
+    
+    if(!updateUser) return res.status(404).json({msg : "User Not found!"});
+    return res.status(200).json({msg : "Username Updated Successfully !"});
+  }
+  catch(err) {
+    res.status(500).json({msg : "Server not Running"});
   }
 });
 
