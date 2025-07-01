@@ -6,6 +6,7 @@ import userrouter from "./routes/user";
 import { errorHandler } from "./middlewares/errorhandler";
 import testRouter from "./db/client";
 import todoRouter from "./routes/todos";
+import authRouter from "./routes/authRouter";
 
 const app = express();
 app.use(express.json());
@@ -28,6 +29,7 @@ app.use("/api", echorouter);
 app.use("/api", userrouter);
 app.use("/api/user", testRouter); 
 app.use("/api/todo", todoRouter);
+app.use("/api/auth", authRouter);
 
 app.use(errorHandler);
 

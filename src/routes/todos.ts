@@ -7,7 +7,7 @@ const prisma = new PrismaClient;
 const todoRouter = Router();
 
 todoRouter.post("/create", async(req : Request, res : Response) => {
-  const safeParsed = todoSchema.safeParse(req.body)
+  const safeParsed = todoSchema.safeParse(req.body);
   if(!safeParsed.success) {
     return res.status(400).json({msg : "Invalid Inputs"});
   }
