@@ -5,7 +5,7 @@ import {z} from "zod";
 const testRouter = Router();
 const prisma = new PrismaClient();
 
-testRouter.post("/create", async (req : Request, res : Response) => {
+testRouter.post("/create", async (req : Request, res : Response) => { // creation
   const extractedMail = req.body.email;
   const extractedUsername = req.body.username;
   if(!extractedMail || !extractedUsername) {
@@ -24,7 +24,7 @@ testRouter.post("/create", async (req : Request, res : Response) => {
   }
 });
 
-testRouter.get("/all", async (req : Request, res : Response) => {
+testRouter.get("/all", async (req : Request, res : Response) => { // fetching/reading
   try { 
     const users = await prisma.user.findMany()
     return res.status(200).json({
@@ -37,7 +37,7 @@ testRouter.get("/all", async (req : Request, res : Response) => {
   }
 });
 
-testRouter.get("/:id", async (req : Request, res : Response) => {
+testRouter.get("/:id", async (req : Request, res : Response) => { // reading something specific
   const id = parseInt(req.params.id);
   if(isNaN(id)) {
     return res.status(400).json({
@@ -61,7 +61,7 @@ const usernameSchema = z.object({
   username : z.string().min(3)
 })
 
-testRouter.put("/:id", async (req : Request, res : Response) => {
+testRouter.put("/:id", async (req : Request, res : Response) => { // updation 
   const safeParsed = usernameSchema.safeParse(req.body);
   const id = parseInt(req.params.id);
 
@@ -88,7 +88,7 @@ testRouter.put("/:id", async (req : Request, res : Response) => {
   }
 });
 
-testRouter.delete("/:id", async(req : Request, res : Response) => {
+testRouter.delete("/:id", async(req : Request, res : Response) => { // deletion
   const id = parseInt(req.params.id);
   if(isNaN(id)) {
     return res.status(400).json({msg: "Bad Request"});
@@ -104,5 +104,8 @@ testRouter.delete("/:id", async(req : Request, res : Response) => {
     res.status(404).json({msg : "User Not Found"})
   }
 });
+
+
+// done with CRUD
 
 export default testRouter;
